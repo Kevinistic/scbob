@@ -39,7 +39,7 @@ def send_screenshot():
     files = {"file": ("screenshot.png", img_buffer, "image/png")}
     response = requests.post(WEBHOOK_URL, data={"payload_json": json.dumps(payload)}, files=files)
     
-    if response.status_code == 204:
+    if response.status_code == 200:
         tprint("Screenshot sent successfully")
     else:
         tprint(f"Failed to send screenshot. Status code: {response.status_code}")
@@ -58,17 +58,21 @@ def get_next_send_time():
     return next_time
 
 def main():
-    tprint("Sending initial screenshot...")
-    send_screenshot()
-    
-    while True:
-        next_time = get_next_send_time()
-        sleep_seconds = (next_time - datetime.now()).total_seconds()
-        
-        tprint(f"Next screenshot at {next_time.strftime('%H:%M:%S')} (in {sleep_seconds:.0f} seconds)")
-        time.sleep(sleep_seconds)
-        
+    try:
+        tprint("Sending initial screenshot...")
         send_screenshot()
+        
+        while True:
+            next_time = get_next_send_time()
+            sleep_seconds = (next_time - datetime.now()).total_seconds()
+            
+            tprint(f"Next screenshot at {next_time.strftime('%H:%M:%S')} (in {sleep_seconds:.0f} seconds)")
+            time.sleep(sleep_seconds)
+            
+            send_screenshot()
+    except KeyboardInterrupt:
+        tprint("Shutting down gracefully... Goodbye!")
+        exit(0)
 
 if __name__ == "__main__":
     main()
