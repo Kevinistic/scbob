@@ -4,7 +4,7 @@ this thing automatically captures your entire screen and sends it to Discord via
 
 ## features
 
-- captures screenshots at **:00** and **:30** of every hour
+- captures screenshots every hour
 - sends an initial screenshot immediately on launch
 - uploads screenshots directly to Discord embeds (no local file saved)
 - timestamped console output with format `[YYYY-MM-DD_HH:MM:SS]`
@@ -38,7 +38,7 @@ python main.py
 
 the bot will:
 1. send an initial screenshot immediately
-2. wait until the next scheduled time (:00 or :30)
+2. wait until the next scheduled time (:00 in this case)
 3. continue sending screenshots every 30 minutes
 
 press `Ctrl+C` to stop the bot.
@@ -47,7 +47,7 @@ press `Ctrl+C` to stop the bot.
 
 - screenshots are captured using `pyautogui`
 - images are stored in memory (not saved to disk)
-- timing is synchronized to clock times (:00 and :30)
+- timing is synchronized
 - all activity is printed to console with timestamps
 
 ## license
