@@ -1,4 +1,5 @@
 import pyautogui
+import sys
 import time
 import os
 import json
@@ -46,19 +47,33 @@ def get_next_send_time():
     now = datetime.now()
     return (now + timedelta(hours=1)).replace(minute=0, second=0, microsecond=0)
 
+def delete_last_line():
+    #cursor up one line
+    sys.stdout.write('\x1b[1A')
+
+    #delete last line
+    sys.stdout.write('\x1b[2K')
+
 def main():
     try:
+        start_time = datetime.now()
         tprint("Sending initial screenshot...")
-        send_screenshot()
+        delete_last_line()
         
         while True:
+            send_screenshot()
+
             next_time = get_next_send_time()
             sleep_seconds = (next_time - datetime.now()).total_seconds()
             
             tprint(f"Next screenshot at {next_time.strftime('%H:%M:%S')}")
+            # uptime in format xxd xxh xxm xxs
+            uptime = datetime.now() - start_time
+            tprint(f"Uptime: {uptime.days}d {uptime.seconds//3600}h {(uptime.seconds//60)%60}m {uptime.seconds%60}s")
             time.sleep(sleep_seconds)
-            
-            send_screenshot()
+
+            delete_last_line()
+            delete_last_line()
     except KeyboardInterrupt:
         tprint("Shutting down gracefully... Goodbye!")
         exit(0)
