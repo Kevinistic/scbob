@@ -56,20 +56,21 @@ def delete_last_line():
 
 def main():
     try:
-        start_time = datetime.now()
+        hours_uptime = 0
         tprint("Sending initial screenshot...")
         delete_last_line()
         
         while True:
             send_screenshot()
+            hours_uptime += 1
 
             next_time = get_next_send_time()
             sleep_seconds = (next_time - datetime.now()).total_seconds()
             
             tprint(f"Next screenshot at {next_time.strftime('%H:%M:%S')}")
-            # uptime in format xxd xxh xxm xxs
-            uptime = datetime.now() - start_time
-            tprint(f"Uptime: {uptime.days}d {uptime.seconds//3600}h {(uptime.seconds//60)%60}m {uptime.seconds%60}s")
+            days = hours_uptime // 24
+            hours = hours_uptime % 24
+            tprint(f"Uptime: {days}d {hours}h")
             time.sleep(sleep_seconds)
 
             delete_last_line()
